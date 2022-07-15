@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            app:cardCornerRadius="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <TextView
+                android:id="@+id/txt_First_letter"
+                android:layout_gravity="center"
+                android:text="A"
+                android:textSize="24sp"
+                android:textColor="?attr/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:textColor="?attr/colorOnSecondary"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="2dp"
+            android:text="Fardin Aghadadashi"
+            app:layout_constraintTop_toTopOf="@id/card"
+            app:layout_constraintStart_toEndOf="@id/card"
+            app:layout_constraintBottom_toTopOf="@id/txt_job_main"
+            android:id="@+id/txt_name_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            android:text="Android"
+            app:layout_constraintTop_toBottomOf="@id/txt_name_main"
+            app:layout_constraintBottom_toBottomOf="@id/card"
+            app:layout_constraintStart_toStartOf="@id/txt_name_main"
+            android:id="@+id/txt_job_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:src="@drawable/ic_baseline_bar_chart_24"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/txt_number_main"
+            android:layout_width="18dp"
+            android:layout_height="18dp"/>
+
+        <TextView
+            android:text="173"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/img"
+            app:layout_constraintEnd_toEndOf="@id/img"
+            app:layout_constraintStart_toStartOf="@id/img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/txt_number_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
