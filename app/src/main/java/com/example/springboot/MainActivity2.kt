@@ -9,6 +9,10 @@ import com.example.springboot.apiManager.ApiService
 import com.example.springboot.databinding.ActivityMain2Binding
 import com.example.springboot.recyclerMain.Student
 import com.google.gson.JsonObject
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity2 : AppCompatActivity() {
     lateinit var binding: ActivityMain2Binding
     lateinit var apiService: ApiService
+    lateinit var disposable:Disposable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMain2Binding.inflate(layoutInflater)
@@ -117,14 +122,22 @@ class MainActivity2 : AppCompatActivity() {
                     if (score.isNotEmpty()){
                         jsonObject.addProperty("score", score.toInt())
 
-                        apiService.insertStudent(jsonObject).enqueue(object :Callback<String>{
-                            override fun onResponse(call: Call<String>, response: Response<String>) {}
+                        apiService
+                            .insertStudent(jsonObject)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(object :SingleObserver<String>{
+                                override fun onSubscribe(d: Disposable) {
+                                    disposable = d
+                                }
 
-                            override fun onFailure(call: Call<String>, t: Throwable) {
-                                Log.v("apiLog", t.message!!)
-                            }
+                                override fun onSuccess(t: String) {}
 
-                        })
+                                override fun onError(e: Throwable) {
+                                    Log.v("testRxJava", e.message!!)
+                                }
+
+                            })
                         onBackPressed()
                     }else{
                         Toast.makeText(this, "write your score", Toast.LENGTH_SHORT).show()

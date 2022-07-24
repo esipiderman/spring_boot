@@ -11,10 +11,16 @@ import com.example.springboot.apiManager.ApiService
 import com.example.springboot.databinding.ActivityMainBinding
 import com.example.springboot.recyclerMain.RecyclerAdapter
 import com.example.springboot.recyclerMain.Student
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.internal.operators.observable.ObservableObserveOn
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val BASE_URL = "http://192.168.1.97:8080"
@@ -23,6 +29,7 @@ class MainActivity : AppCompatActivity() , RecyclerAdapter.StudentEvent{
     lateinit var binding: ActivityMainBinding
     lateinit var apiService: ApiService
     lateinit var recyclerAdapter: RecyclerAdapter
+    lateinit var disposable: Disposable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -32,6 +39,7 @@ class MainActivity : AppCompatActivity() , RecyclerAdapter.StudentEvent{
             .Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
         apiService = retrofit.create(ApiService::class.java)
@@ -50,17 +58,24 @@ class MainActivity : AppCompatActivity() , RecyclerAdapter.StudentEvent{
 
     private fun getDataFromApi() {
 
-        apiService.getAllStudents().enqueue(object :Callback<List<Student>>{
-            override fun onResponse(call: Call<List<Student>>, response: Response<List<Student>>) {
-                val dataFromServer = response.body()!!
-                setDataToRecycler(ArrayList(dataFromServer))
-            }
+        apiService
+            .getAllStudents()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe( object :SingleObserver<List<Student>>{
+                override fun onSubscribe(d: Disposable) {
+                    disposable = d
+                }
 
-            override fun onFailure(call: Call<List<Student>>, t: Throwable) {
-                Log.v("apiLog", t.message!!)
-            }
+                override fun onSuccess(t: List<Student>) {
+                    setDataToRecycler(ArrayList(t))
+                }
 
-        })
+                override fun onError(e: Throwable) {
+                    Log.v("testRxJava", e.message!!)
+                }
+
+            })
 
     }
 
