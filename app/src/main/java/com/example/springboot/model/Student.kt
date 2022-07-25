@@ -1,4 +1,4 @@
-package com.example.springboot.recyclerMain
+package com.example.springboot.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

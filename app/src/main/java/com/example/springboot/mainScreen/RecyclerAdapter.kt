@@ -1,10 +1,10 @@
-package com.example.springboot.recyclerMain
+package com.example.springboot.mainScreen
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.springboot.databinding.ItemRecyclerMainBinding
+import com.example.springboot.model.Student
 
 class RecyclerAdapter(val data : ArrayList<Student>, val studentEvent: StudentEvent) : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
 
