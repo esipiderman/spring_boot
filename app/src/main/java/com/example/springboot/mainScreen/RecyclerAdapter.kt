@@ -1,10 +1,11 @@
 package com.example.springboot.mainScreen
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.springboot.databinding.ItemRecyclerMainBinding
-import com.example.springboot.model.Student
+import com.example.springboot.model.local.student.Student
 
 class RecyclerAdapter(val data : ArrayList<Student>, val studentEvent: StudentEvent) : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
 
@@ -42,19 +43,11 @@ class RecyclerAdapter(val data : ArrayList<Student>, val studentEvent: StudentEv
         return data.size
     }
 
-    fun removeItem(student: Student, position: Int){
-        data.remove(student)
-        notifyItemRemoved(position)
-    }
-
-    fun addItem(student: Student){
-        data.add(0, student)
-        notifyItemInserted(0)
-    }
-
-    fun updateItem(student: Student, position: Int){
-        data.set(position, student)
-        notifyItemChanged(position)
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshData(it: List<Student>) {
+        data.clear()
+        data.addAll(it)
+        notifyDataSetChanged()
     }
 
     interface StudentEvent{

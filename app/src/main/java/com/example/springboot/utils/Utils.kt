@@ -1,6 +1,6 @@
 package com.example.springboot.utils
 
-import com.example.springboot.model.Student
+import com.example.springboot.model.local.student.Student
 import com.google.gson.JsonObject
 
 fun studentToJsonObject(student: Student):JsonObject{

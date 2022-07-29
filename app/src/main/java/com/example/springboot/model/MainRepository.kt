@@ -1,5 +1,10 @@
 package com.example.springboot.model
 
+import androidx.lifecycle.LiveData
+import com.example.springboot.model.api.ApiService
+import com.example.springboot.model.local.MyDatabase
+import com.example.springboot.model.local.student.Student
+import com.example.springboot.model.local.student.StudentDao
 import com.example.springboot.utils.BASE_URL
 import com.example.springboot.utils.studentToJsonObject
 import io.reactivex.Completable
@@ -8,33 +13,45 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainRepository {
-    private val apiService: ApiService
+class MainRepository(
+    private val apiService: ApiService,
+    private val studentDao : StudentDao
+) {
 
-    init {
-        val retrofit = Retrofit
-            .Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-
-        apiService = retrofit.create(ApiService::class.java)
+    fun getAllStudents():LiveData<List<Student>>{
+        return studentDao.getAllData()
     }
 
-    fun getAllStudents():Single<List<Student>>{
-        return apiService.getAllStudents()
+    // caching
+    fun refreshData():Completable{
+        return apiService
+            .getAllStudents()
+            .doOnSuccess {
+                studentDao.insertAll(it)
+            }.ignoreElement()
     }
 
     fun updateStudent(student: Student):Completable{
-        return apiService.updateStudent(student.name, studentToJsonObject(student))
+        return apiService
+            .updateStudent(student.name, studentToJsonObject(student))
+            .doOnComplete {
+                studentDao.update(student)
+            }
     }
 
     fun deleteStudent(studentName:String):Completable{
-        return apiService.deleteStudent(studentName)
+        return apiService
+            .deleteStudent(studentName)
+            .doOnComplete {
+                studentDao.delete(studentName)
+            }
     }
 
     fun insertStudent(student: Student):Completable{
-        return apiService.insertStudent(studentToJsonObject(student))
+        return apiService
+            .insertStudent(studentToJsonObject(student))
+            .doOnComplete {
+                studentDao.insert(student)
+            }
     }
 }

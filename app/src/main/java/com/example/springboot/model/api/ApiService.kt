@@ -1,5 +1,6 @@
-package com.example.springboot.model
+package com.example.springboot.model.api
 
+import com.example.springboot.model.local.student.Student
 import com.google.gson.JsonObject
 import io.reactivex.Completable
 import io.reactivex.Single
